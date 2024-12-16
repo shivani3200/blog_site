@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Box, TextField, Button, styled, Typography } from "@mui/material";
+// import { signupUser } from "../../../../server/controller/user-controller";
+import { API } from "../../service/api";
 
 const Component = styled(Box)`
   width: 400px;
@@ -56,13 +58,28 @@ const Text = styled(Typography)`
   color: #878787;
 `;
 
+const signupInitialValues = {
+  name: "",
+  username: "",
+  password: "",
+};
+
 const Login = () => {
   const imageURL =
     "/vecteezy_content-creator-png-graphic-clipart-design_20047227.png";
 
   const [account, toggleAccount] = useState("login");
+  const [signup, setSignup] = useState(signupInitialValues);
+
   const toggleSignUp = () => {
     account === "signUp" ? toggleAccount("login") : toggleAccount("signUp");
+  };
+  const onInputChange = (e) => {
+    setSignup({ ...signup, [e.target.name]: e.target.value });
+  };
+
+  const signupUser = async () => {
+    let response = await API.userSignup(signup);
   };
   return (
     <Component>
@@ -80,10 +97,27 @@ const Login = () => {
           </Wrapper>
         ) : (
           <Wrapper>
-            <TextField variant="standard" label=" Full name" />
-            <TextField variant="standard" label=" Username" />
-            <TextField variant="standard" label=" Password" />
-            <LoginButton variant="contained">SIGN UP</LoginButton>
+            <TextField
+              variant="standard"
+              onChange={(e) => onInputChange(e)}
+              name="name"
+              label=" Full name"
+            />
+            <TextField
+              variant="standard"
+              onChange={(e) => onInputChange(e)}
+              name="username"
+              label=" Username"
+            />
+            <TextField
+              variant="standard"
+              onChange={(e) => onInputChange(e)}
+              name="password"
+              label=" Password"
+            />
+            <LoginButton onClick={() => signupUser()} variant="contained">
+              SIGN UP
+            </LoginButton>
             <Text style={{ textAlign: "center", padding: "20px 0 0" }}>OR</Text>
             <SignUpButton onClick={() => toggleSignUp()}>
               Already have an existing account?
